@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Qual é o seu próximo passo no violão e na guitarra?</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Young+Serif&family=Figtree:wght@400;600&display=swap">
+<style>
+:root{--bg:#EDF1F4;--ink:#13262B;--mut:#4F646A;--card:#fff;--line:#CFD9DD;--btn:#0F5257;--btnt:#fff;--sel:#DDEBEC;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0E1A1D;--ink:#E6EEF0;--mut:#9DB3B8;--card:#16272B;--line:#2B4046;--btn:#6CBDBD;--btnt:#0E1A1D;--sel:#1F3A3F}}
+:root[data-theme="dark"]{--bg:#0E1A1D;--ink:#E6EEF0;--mut:#9DB3B8;--card:#16272B;--line:#2B4046;--btn:#6CBDBD;--btnt:#0E1A1D;--sel:#1F3A3F}
+*{box-sizing:border-box}
+html{height:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 17px/1.55 Figtree,system-ui,sans-serif;min-height:100%}
+main{max-width:620px;margin:0 auto;padding:24px 18px 48px}
+h1,h2{font-family:"Young Serif",Georgia,serif;font-weight:400;line-height:1.2;margin:0 0 14px}
+h1{font-size:28px}h2{font-size:24px}
+p{margin:0 0 14px}
+.mut{color:var(--mut);font-size:15px}
+.board{position:relative;height:30px;border-radius:6px;background:
+repeating-linear-gradient(90deg,transparent 0 calc(11.111% - 2px),#C9CED2 calc(11.111% - 2px) 11.111%),
+linear-gradient(transparent 44%,rgba(255,255,255,.32) 44% 56%,transparent 56%),#3A2218;margin:6px 0 22px}
+.dot{position:absolute;top:50%;width:16px;height:16px;border-radius:50%;background:#E3B24D;transform:translate(-50%,-50%);transition:left .35s}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px 20px}
+.opt{display:block;width:100%;text-align:left;font:inherit;color:inherit;background:transparent;border:1px solid var(--line);border-radius:10px;padding:13px 14px;margin:0 0 10px;cursor:pointer}
+.opt:hover{background:var(--sel)}
+.opt.on{background:var(--sel);border-color:var(--btn)}
+.cta{display:block;text-align:center;text-decoration:none;font:600 17px Figtree,sans-serif;background:var(--btn);color:var(--btnt);border:0;border-radius:10px;padding:15px 18px;cursor:pointer;width:100%}
+.lnk{background:none;border:0;color:var(--mut);font:inherit;font-size:15px;text-decoration:underline;cursor:pointer;padding:8px 0}
+button:focus-visible,a:focus-visible{outline:3px solid #E3B24D;outline-offset:2px}
+ul{padding-left:20px;margin:0 0 20px}li{margin:0 0 6px}
+.also{margin-top:22px;border-top:1px solid var(--line);padding-top:16px}
+.also a{color:var(--ink);font-weight:600}
+.row{display:flex;justify-content:space-between;align-items:center;margin-top:8px}
+.f label{display:block;font-size:15px;margin:12px 0 4px}
+.f input{width:100%;font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:12px 13px}
+.f .cta{margin-top:14px}
+.err{min-height:1.2em;margin:8px 0 0;font-size:15px;color:#B3261E}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .err{color:#FF9C94}}
+:root[data-theme="dark"] .err{color:#FF9C94}
+@media (prefers-reduced-motion:reduce){.dot{transition:none}}
+</style>
+</head>
+<body>
+<main id="app"></main>
+<script>
+// Links das páginas de venda (Hotmart) e do WhatsApp do acompanhamento individual.
+var LINKS={P:"https://go.hotmart.com/L108027598E",T:"https://go.hotmart.com/P108037327P",I:"https://go.hotmart.com/G101792116A",C:"https://go.hotmart.com/M103802828L",A:"https://wa.me/5511949708621"};
+
+// Cada alternativa: [texto, perfis que pontuam]  P=Método Prático  T=Teoria  I=Masterclass  C=Clã das Cordas  A=Acompanhamento individual
+var Q=[
+{q:"Qual é o seu nível hoje?",o:[["Estou começando, toco poucos acordes","P"],["Toco músicas, mas travo nas trocas e pestanas","P"],["Toco bem, mas sinto que estagnei","TC"],["Sou intermediário ou avançado","CA"]]},
+{q:"Qual é a sua maior dificuldade agora?",o:[["Trocar acordes, fazer pestanas e levadas","P"],["Entender teoria e a lógica da música","T"],["Improvisar e criar solos","IC"],["Aplicar harmonia (acordes alterados, jazz, fusion)","CA"],["Não sei o que estudar nem em que ordem","AC"]]},
+{q:"O que você quer alcançar com o instrumento?",o:[["Tocar por prazer, para amigos e família","P"],["Entender música de verdade","T"],["Solar e improvisar bem","IC"],["Tocar em banda, igreja ou shows","CA"],["Viver de música, ensinar ou compor","AC"]]},
+{q:"Quanto você já estudou de forma organizada?",o:[["Nunca estudei","P"],["Algumas aulas e vídeos soltos","PT"],["Vários cursos, mas sem resultado consistente","CA"],["Estudo há anos e quero me aprofundar","CA"]]},
+{q:"Como você aprende melhor?",o:[["Com um passo a passo guiado, no meu ritmo","PT"],["Com conteúdo novo chegando sempre","C"],["Com uma comunidade para trocar ideias","C"],["Com alguém observando meu jeito de tocar e corrigindo","A"]]},
+{q:"O que mais te trava hoje?",o:[["Falta de método","P"],["Falta de base teórica","T"],["Falta de direção e de feedback","A"],["Falta de variedade de conteúdo","C"],["Falta de tempo","I"]]},
+{q:"Quanto tempo você consegue dedicar por semana?",o:[["Menos de 2 horas","I"],["De 2 a 5 horas","PT"],["Mais de 5 horas","C"],["Quero me dedicar de verdade e ver resultado rápido","A"]]},
+{q:"Se pudesse resolver isso de uma vez, o que escolheria?",o:[["Um curso curto e direto","IP"],["Uma formação completa","T"],["Acesso a tudo e a uma comunidade","C"],["Aulas só para mim, com plano personalizado","A"]]},
+{q:"Você está disposto a investir em acompanhamento para acelerar?",o:[["Prefiro começar com algo acessível","IP"],["Invisto se fizer sentido para o meu objetivo","C"],["Sim, quero atenção individual","A"]]}
+];
+
+var R={
+P:{n:"Método Violão e Guitarra Prático para Iniciantes",t:"Seu próximo passo é dominar o básico de vez",
+ d:"Você está na fase em que acordes, pestanas e ritmo decidem se você vai tocar com prazer ou desistir. O caminho mais curto é treinar essas três coisas em ordem.",
+ i:["Troca de Acordes","Dominando Pestanas","45 Levadas Fáceis","Bônus: Improvisação para Iniciantes"],b:"Quero o Método Prático"},
+T:{n:"Formação em Teoria Musical",t:"Você já toca. Agora falta entender o porquê",
+ d:"Quando você sabe por que um acorde funciona, mudar de tom, montar uma harmonia e aprender música nova fica muito mais rápido.",
+ i:["Teoria 1","Teoria 2"],b:"Quero a Formação em Teoria"},
+I:{n:"Masterclass de Improvisação para Iniciantes",t:"Comece a improvisar sem esperar uma formação inteira",
+ d:"Uma porta de entrada acessível para sair do solo decorado e começar a criar os seus.",
+ i:["Aula focada em improvisação para quem está começando","Investimento baixo para dar o primeiro passo"],b:"Quero a Masterclass"},
+C:{n:"Clã das Cordas",t:"Você precisa de um caminho completo e de gente por perto",
+ d:"Seus desafios passam por mais de uma área. Na comunidade você tem todos os cursos reunidos e conteúdos exclusivos que não param de crescer.",
+ i:["Todos os cursos em um só lugar","Cursos exclusivos, como Harmonia e Improvisação Jazz Fusion","Comunidade online em constante crescimento"],b:"Quero entrar no Clã das Cordas"},
+A:{n:"Acompanhamento individual",t:"Você vai mais longe com alguém acompanhando o seu jogo",
+ d:"O seu momento pede um plano feito sob medida. No acompanhamento individual eu ensino online, com exclusividade e foco total em você.",
+ i:["Aulas online só para você","Plano baseado nos seus objetivos e dificuldades","Feedback direto sobre o seu jeito de tocar"],b:"Quero falar sobre o acompanhamento"}
+};
+// Para guardar os contatos de quem cai no Clã ou no acompanhamento, cole aqui o endereço do seu formulário (Formspree, Google Apps Script etc.). Vazio = não envia.
+var LEAD_ENDPOINT="";
+var SEC={A:"C",C:"A",T:"C",P:"C",I:"C"};
+var SECTXT={C:"Prefere algo mais amplo? Conheça o",A:"Quer ir além e ter aulas só suas? Conheça o",I:"Para dar o primeiro passo com pouco investimento, veja a"};
+
+var a=[],app=document.getElementById("app");
+
+function head(i){
+ var pct=(i/Q.length)*100;
+ return '<h1>Qual é o seu próximo passo no violão e na guitarra?</h1><div class="board" aria-hidden="true"><div class="dot" style="left:'+(pct<4?4:pct>96?96:pct)+'%"></div></div>';
+}
+
+function start(){
+ app.innerHTML='<h1>Qual é o seu próximo passo no violão e na guitarra?</h1><div class="board" aria-hidden="true"><div class="dot" style="left:4%"></div></div>'+
+ '<div class="card"><p>Responda 9 perguntas rápidas e descubra qual caminho combina com o seu momento.</p><button class="cta" id="go">Começar o diagnóstico</button></div>';
+ document.getElementById("go").onclick=function(){a=[];show(0)};
+}
+
+function show(i){
+ var h=head(i)+'<div class="card"><p class="mut">Pergunta '+(i+1)+' de '+Q.length+'</p><h2>'+Q[i].q+'</h2>';
+ Q[i].o.forEach(function(o,k){h+='<button class="opt'+(a[i]===k?' on':'')+'" data-k="'+k+'">'+o[0]+'</button>'});
+ h+='</div>'+(i>0?'<div class="row"><button class="lnk" id="back">Voltar</button></div>':'');
+ app.innerHTML=h;
+ app.querySelectorAll(".opt").forEach(function(b){b.onclick=function(){
+  a[i]=+b.dataset.k;b.classList.add("on");
+  setTimeout(function(){i+1<Q.length?show(i+1):result()},180);
+ }});
+ var bk=document.getElementById("back");if(bk)bk.onclick=function(){show(i-1)};
+ window.scrollTo(0,0);
+}
+
+function calc(){
+ var s={P:0,T:0,I:0,C:0,A:0};
+ a.forEach(function(v,i){Q[i].o[v][1].split("").forEach(function(k){s[k]++})});
+ var ord=["A","C","T","P","I"].filter(function(k){return !(a[0]===3&&k==="P")});
+ var m=Math.max.apply(null,ord.map(function(k){return s[k]}));
+ var main=ord.filter(function(k){return s[k]===m})[0];
+ var entry=(a[6]===0&&main!=="I")?"I":null;
+ return{main:main,sec:SEC[main],entry:entry};
+}
+
+function link(k,txt){return '<a href="'+LINKS[k]+'" target="_blank" rel="noopener">'+txt+'</a>'}
+
+var LEAD={C:1,A:1};
+
+function form(k){
+ var wa=k==="C";
+ return '<form class="f" id="lead" novalidate><p class="mut">'+(wa?'Deixe seus dados para receber informações sobre o Clã das Cordas e seguir para a página de inscrição.':'Diga seu nome e eu te respondo direto no WhatsApp.')+'</p>'+
+ '<label for="nm">Seu nome</label><input id="nm" autocomplete="given-name">'+
+ (wa?'<label for="wp">Seu WhatsApp (com DDD)</label><input id="wp" type="tel" inputmode="tel" autocomplete="tel">':'')+
+ '<p class="err" id="err" role="alert"></p><button class="cta" type="submit">'+R[k].b+'</button>'+
+ '<button class="lnk" type="button" id="skip">Prefiro ir direto '+(wa?'para a página':'para o WhatsApp')+'</button></form>';
+}
+
+function bindForm(k){
+ var f=document.getElementById("lead");if(!f)return;
+ var ctx=a.map(function(v,i){return Q[i].q+" "+Q[i].o[v][0]}).join(" | ");
+ function go(name){
+  var url=LINKS[k];
+  if(k==="A"&&name)url+="?text="+encodeURIComponent("Olá! Meu nome é "+name+". Fiz o quiz e meu resultado foi acompanhamento individual. Quero saber mais.");
+  window.open(url,"_blank","noopener");
+ }
+ f.onsubmit=function(e){
+  e.preventDefault();
+  var name=document.getElementById("nm").value.trim(),w=document.getElementById("wp"),wp=w?w.value.replace(/\D/g,""):"",err=document.getElementById("err");
+  if(!name){err.textContent="Digite o seu nome para continuar.";return}
+  if(w&&wp.length<10){err.textContent="Digite o WhatsApp com DDD, por exemplo 11 99999-9999.";return}
+  if(LEAD_ENDPOINT){try{fetch(LEAD_ENDPOINT,{method:"POST",mode:"no-cors",keepalive:true,body:new URLSearchParams({nome:name,whatsapp:wp,perfil:R[k].n,respostas:ctx})})}catch(x){}}
+  go(name);
+ };
+ document.getElementById("skip").onclick=function(){go("")};
+}
+
+function result(){
+ var r=calc(),m=R[r.main],h=head(Q.length)+'<div class="card"><p class="mut">Seu resultado</p><h2>'+m.t+'</h2><p>'+m.d+'</p>'+
+ '<p><strong>'+m.n+'</strong> inclui:</p><ul>'+m.i.map(function(x){return '<li>'+x+'</li>'}).join("")+'</ul>'+
+ (LEAD[r.main]?form(r.main):'<a class="cta" href="'+LINKS[r.main]+'" target="_blank" rel="noopener">'+m.b+'</a>');
+ h+='<div class="also">';
+ if(r.entry)h+='<p class="mut">'+SECTXT.I+' '+link("I","Masterclass de Improvisação para Iniciantes")+'.</p>';
+ if(r.sec&&r.sec!==r.entry)h+='<p class="mut">'+SECTXT[r.sec]+' '+link(r.sec,R[r.sec].n)+'.</p>';
+ h+='</div></div><div class="row"><button class="lnk" id="again">Refazer o quiz</button></div>';
+ app.innerHTML=h;
+ document.getElementById("again").onclick=start;
+ bindForm(r.main);
+ window.scrollTo(0,0);
+}
+
+start();
+</script>
+</body>
+</html>
